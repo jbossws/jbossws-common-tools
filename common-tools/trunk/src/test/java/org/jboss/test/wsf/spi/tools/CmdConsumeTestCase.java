@@ -21,7 +21,7 @@
  */
 package org.jboss.test.wsf.spi.tools;
 
-import org.jboss.wsf.spi.tools.cmd.WSConsume;
+import org.jboss.ws.tools.cmd.WSConsume;
 
 /**
  * Test the command line interface to WSConsume.

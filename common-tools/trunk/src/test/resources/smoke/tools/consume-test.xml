@@ -9,7 +9,7 @@
   <property name="spi.dir" value="@SPI_DIR@"/>
 
   <!-- Define the JAX-WS wsconsume task -->
-  <taskdef name="wsconsume" classname="org.jboss.wsf.spi.tools.ant.WSConsumeTask">
+  <taskdef name="wsconsume" classname="org.jboss.ws.tools.ant.WSConsumeTask">
     <classpath>
       <pathelement location="${spi.dir}/output/lib/jbossws-spi.jar"/>
     </classpath>

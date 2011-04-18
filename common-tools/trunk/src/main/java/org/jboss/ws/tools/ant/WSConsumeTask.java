@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.wsf.spi.tools.ant;
+package org.jboss.ws.tools.ant;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -285,7 +285,7 @@ public class WSConsumeTask extends Task
 
    private void executeForked() throws BuildException
    {
-      command.setClassname(org.jboss.wsf.spi.tools.cmd.WSConsume.class.getName());
+      command.setClassname(org.jboss.ws.tools.cmd.WSConsume.class.getName());
 
       Path path = command.createClasspath(getProject());
       path.append(getTaskClassPath());
