@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.wsf.spi.tools.cmd;
+package org.jboss.ws.tools.cmd;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
@@ -36,8 +36,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 import org.jboss.wsf.spi.tools.WSContractProvider;
-import org.jboss.wsf.spi.util.Log4JUtil;
-import org.jboss.wsf.spi.util.Log4jOutputStream;
 
 /**
  * WSProvideTask is a cmd line tool that generates portable JAX-WS artifacts

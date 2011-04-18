@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.wsf.spi.tools.ant;
+package org.jboss.ws.tools.ant;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -33,7 +33,7 @@ import java.security.PrivilegedExceptionAction;
  * @since 19-Jun-2009
  *
  */
-class SecurityActions
+final class SecurityActions
 {
    /**
     * Get context classloader.

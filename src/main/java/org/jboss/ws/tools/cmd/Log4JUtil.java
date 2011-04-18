@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.wsf.spi.util;
+package org.jboss.ws.tools.cmd;
 
 import java.net.URL;
 
@@ -31,10 +31,15 @@ import org.apache.log4j.helpers.Loader;
  * @since 10-Jun-2010
  *
  */
-public class Log4JUtil
+final class Log4JUtil
 {
    public static final String LOG4J_CONFIGURATION = "log4j.configuration";
    public static final String LOG4J_PROPERTIES = "log4j.properties";
+   
+   private Log4JUtil()
+   {
+      // forbidden instantiation
+   }
    
    /**
     * Returns true if a log4j configuration can be found given the current environment.

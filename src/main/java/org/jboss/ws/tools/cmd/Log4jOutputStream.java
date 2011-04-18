@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.wsf.spi.util;
+package org.jboss.ws.tools.cmd;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -43,7 +43,7 @@ import org.apache.log4j.Priority;
  * </pre>
  * 
  */
-public class Log4jOutputStream extends OutputStream
+final class Log4jOutputStream extends OutputStream
 {
    protected static final String LINE_SEPERATOR = System.getProperty("line.separator");
 

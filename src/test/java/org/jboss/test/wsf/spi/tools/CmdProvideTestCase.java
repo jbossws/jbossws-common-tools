@@ -21,7 +21,7 @@
  */
 package org.jboss.test.wsf.spi.tools;
 
-import org.jboss.wsf.spi.tools.cmd.WSProvide;
+import org.jboss.ws.tools.cmd.WSProvide;
 
 /**
  * @author Heiko.Braun@jboss.com
