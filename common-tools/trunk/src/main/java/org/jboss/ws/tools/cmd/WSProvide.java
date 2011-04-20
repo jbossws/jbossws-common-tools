@@ -59,11 +59,11 @@ import org.jboss.wsf.spi.tools.WSContractProvider;
  * </pre>
  * 
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
+ * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
  */
 public class WSProvide
 {
-   private static final ClassLoader MODULES_LOADER = SecurityActions.getModulesClassLoader();
-   private ClassLoader loader = MODULES_LOADER != null ? MODULES_LOADER : SecurityActions.getContextClassLoader();
+   private ClassLoader loader = WSProvide.class.getClassLoader();
    private File outputDir = new File("output");
    private boolean generateSource;
    private boolean generateWsdl;

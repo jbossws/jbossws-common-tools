@@ -66,7 +66,6 @@ import java.util.List;
  */
 public class WSConsume
 {
-   private static final ClassLoader MODULES_LOADER = SecurityActions.getModulesClassLoader();
    private List<File> bindingFiles = new ArrayList<File>();
    private File outputDir = new File("output");
    private boolean generateSource;
@@ -86,23 +85,16 @@ public class WSConsume
 
    public static void main(String[] args)
    {
-      if (MODULES_LOADER != null)
-      {
-         final ClassLoader origLoader = SecurityActions.getContextClassLoader();
-         try
-         {
-            SecurityActions.setContextClassLoader(MODULES_LOADER);
-            mainInternal(args);
-         }
-         finally
-         {
-            SecurityActions.setContextClassLoader(origLoader);
-         }
-      }
-      else
-      {
-         mainInternal(args);
-      }
+       final ClassLoader origLoader = SecurityActions.getContextClassLoader();
+       try
+       {
+           SecurityActions.setContextClassLoader(WSConsume.class.getClassLoader());
+           mainInternal(args);
+       }
+       finally
+       {
+           SecurityActions.setContextClassLoader(origLoader);
+       }
    }
    
    private static void mainInternal(final String[] args)
