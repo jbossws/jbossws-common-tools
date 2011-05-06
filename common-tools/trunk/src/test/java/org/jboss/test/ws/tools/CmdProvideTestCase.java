@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.wsf.spi.tools;
+package org.jboss.test.ws.tools;
 
 import org.jboss.ws.tools.cmd.WSProvide;
 
@@ -38,8 +38,8 @@ public class CmdProvideTestCase extends CommandlineTestBase
 
       // enforce loading of the tracker implemenation
       System.setProperty(
-        "org.jboss.wsf.spi.tools.ProviderFactoryImpl",
-        "org.jboss.test.wsf.spi.tools.CmdProvideTrackerFactory"
+        "org.jboss.ws.api.tools.ProviderFactory",
+        "org.jboss.test.ws.tools.CmdProvideTrackerFactory"
       );
    }
 
@@ -66,7 +66,7 @@ public class CmdProvideTestCase extends CommandlineTestBase
 
    public void testValidOutputDir() throws Exception
    {
-      executeCmd("-o outputDir org.jboss.test.wsf.spi.tools.CalculatorBean", false);
+      executeCmd("-o outputDir org.jboss.test.ws.tools.CalculatorBean", false);
       assertTrue("setOutputDirectory() not invoked", CmdProvideTracker.LAST_EVENT.indexOf("setOutputDirectory")!=-1);
    }
 

@@ -19,19 +19,42 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.wsf.spi.tools;
-
-import org.jboss.wsf.spi.tools.WSContractConsumerFactory;
-import org.jboss.wsf.spi.tools.WSContractConsumer;
+package org.jboss.test.ws.tools;
 
 /**
  * @author Heiko.Braun@jboss.com
  */
-public class CmdConsumeTrackerFactory implements WSContractConsumerFactory
+public class AntProvideTestCase extends BuildFileTest
 {
-
-   public WSContractConsumer createConsumer()
+   protected void setUp() throws Exception
    {
-      return new CmdConsumeTracker();
+      super.setUp();
+
+      // cleanup events
+      CmdProvideTracker.LAST_EVENT = "";
+
+      // enforce loading of the tracker implemenation
+      System.setProperty("org.jboss.ws.api.tools.ProviderFactory", "org.jboss.test.ws.tools.CmdProvideTrackerFactory");
+
+      configureProject("src/test/resources/smoke/tools/provide-test.xml");
    }
+
+   public void testPlainInvocation()
+   {
+      executeTarget("plainInvocation");
+      assertTrue("provide() not invoked", CmdProvideTracker.LAST_EVENT.indexOf("provide") != -1);
+   }
+
+   public void testIncludeWSDL()
+   {
+      executeTarget("includeWSDL");
+      assertTrue("setGenerateWsdl() not invoked", CmdProvideTracker.LAST_EVENT.indexOf("setGenerateWsdl") != -1);
+   }
+
+   public void testExtraClasspath()
+   {
+      executeTarget("extraClasspath");
+
+   }
+
 }

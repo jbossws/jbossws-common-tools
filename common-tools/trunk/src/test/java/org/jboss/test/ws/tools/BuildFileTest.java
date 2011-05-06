@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package org.jboss.test.wsf.spi.tools;
+package org.jboss.test.ws.tools;
 
 import junit.framework.TestCase;
 import org.apache.tools.ant.BuildEvent;

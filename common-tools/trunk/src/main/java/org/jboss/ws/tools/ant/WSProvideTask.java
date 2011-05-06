@@ -33,7 +33,7 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.CommandlineJava.SysProperties;
 import org.apache.tools.ant.types.Environment.Variable;
-import org.jboss.wsf.spi.tools.WSContractProvider;
+import org.jboss.ws.api.tools.WSContractProvider;
 
 import java.io.File;
 import java.io.PrintStream;

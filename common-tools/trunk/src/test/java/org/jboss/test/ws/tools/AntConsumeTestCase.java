@@ -19,53 +19,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.wsf.spi.tools;
-
-import org.jboss.ws.tools.cmd.WSConsume;
+package org.jboss.test.ws.tools;
 
 /**
- * Test the command line interface to WSConsume.
- *
+ * Test the WSConsumeTask.
+ * This test needs to be executed in 'SPI_HOME/output/tests',
+ * because it works with relative paths.
+ * 
  * @author Heiko.Braun@jboss.com
  */
-public class CmdConsumeTestCase extends CommandlineTestBase
+public class AntConsumeTestCase extends BuildFileTest
 {
-
    protected void setUp() throws Exception
    {
       super.setUp();
 
       // cleanup events
       CmdConsumeTracker.LAST_EVENT = "";
-      
+
       // enforce loading of the tracker implemenation
-      System.setProperty(
-        "org.jboss.wsf.spi.tools.ConsumerFactoryImpl",
-        "org.jboss.test.wsf.spi.tools.CmdConsumeTrackerFactory"
-        );
+      System.setProperty("org.jboss.ws.api.tools.ConsumerFactory", "org.jboss.test.ws.tools.CmdConsumeTrackerFactory");
+
+      configureProject("src/test/resources/smoke/tools/consume-test.xml");
    }
 
-   public void testInvalidBindingOption() throws Exception
+   public void testPlainInvocation()
    {
-      executeCmd("-b", true);
+      executeTarget("plainInvocation");
+      assertTrue("consume() not invoked", CmdConsumeTracker.LAST_EVENT.indexOf("consume") != -1);
    }
 
-   public void testValidBindingOption() throws Exception
-   {
-      executeCmd("-b binding-file.xml Service.wsdl", false);
-      assertTrue("setBindingFiles() not invoked",  CmdConsumeTracker.LAST_EVENT.indexOf("setBindingFiles")!=-1);
-   }
-
-   public void testMissingOptions() throws Exception
-   {
-      executeCmd(null, true);
-   }
-
-   // TODO: add arbitrary combinations on a case by case basis
-
-
-   void runDelegate(String[] args) throws Exception
-   {
-      WSConsume.main(args);
-   }
 }
