@@ -27,7 +27,7 @@ import gnu.getopt.LongOpt;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
-import org.jboss.wsf.spi.tools.WSContractConsumer;
+import org.jboss.ws.api.tools.WSContractConsumer;
 
 import java.io.File;
 import java.io.PrintStream;

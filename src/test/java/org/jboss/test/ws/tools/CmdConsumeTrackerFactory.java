@@ -19,18 +19,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.wsf.spi.tools;
+package org.jboss.test.ws.tools;
 
-// We just need to load it, therefore we skip the JSR 181 annotations here
-public class CalculatorBean
+import org.jboss.ws.api.tools.WSContractConsumerFactory;
+import org.jboss.ws.api.tools.WSContractConsumer;
+
+/**
+ * @author Heiko.Braun@jboss.com
+ */
+public class CmdConsumeTrackerFactory implements WSContractConsumerFactory
 {
-   public int add(int a, int b)
-   {
-      return a+b;
-   }
 
-   public int subtract(int a, int b)
+   public WSContractConsumer createConsumer()
    {
-      return a-b;
+      return new CmdConsumeTracker();
    }
 }

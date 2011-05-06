@@ -35,7 +35,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
-import org.jboss.wsf.spi.tools.WSContractProvider;
+import org.jboss.ws.api.tools.WSContractProvider;
 
 /**
  * WSProvideTask is a cmd line tool that generates portable JAX-WS artifacts

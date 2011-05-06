@@ -19,19 +19,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.wsf.spi.tools;
+package org.jboss.test.ws.tools;
 
-import org.jboss.wsf.spi.tools.WSContractProviderFactory;
-import org.jboss.wsf.spi.tools.WSContractProvider;
-
-/**
- * @author Heiko.Braun@jboss.com
- */
-public class CmdProvideTrackerFactory implements WSContractProviderFactory
+// We just need to load it, therefore we skip the JSR 181 annotations here
+public class CalculatorBean
 {
-
-   public WSContractProvider createProvider(ClassLoader loader)
+   public int add(int a, int b)
    {
-      return new CmdProvideTracker();  
+      return a+b;
+   }
+
+   public int subtract(int a, int b)
+   {
+      return a-b;
    }
 }
