@@ -42,25 +42,22 @@
       <groupId>org.jboss.ws</groupId>
       <artifactId>jbossws-spi</artifactId>
       <version>${jbossws.spi.version}</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>gnu-getopt</groupId>
       <artifactId>getopt</artifactId>
       <version>${getopt.version}</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
       <version>${log4j.version}</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>${junit.version}</version>
-      <scope>provided</scope>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
