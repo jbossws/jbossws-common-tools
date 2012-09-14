@@ -83,4 +83,9 @@ public class CmdProvideTracker extends WSContractProvider
    {
       LAST_EVENT += "setMessageStream";
    }
+
+   public void setPortSoapAddress(String address)
+   {
+      LAST_EVENT += "setPortSoapAddress";
+   }
 }
