@@ -24,7 +24,8 @@
   </scm>
 
   <properties>
-    <jbossws.spi.version>2.0.0.GA</jbossws.spi.version>
+    <jbossws.api.version>1.0.1-SNAPSHOT</jbossws.api.version>
+    <jbossws.spi.version>2.1.0-SNAPSHOT</jbossws.spi.version>
     <ant.version>1.7.1</ant.version>
     <getopt.version>1.0.13</getopt.version>
     <junit.version>3.8.2</junit.version>
@@ -37,6 +38,11 @@
       <artifactId>ant</artifactId>
       <version>${ant.version}</version>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.ws</groupId>
+      <artifactId>jbossws-api</artifactId>
+      <version>${jbossws.api.version}</version>
     </dependency>
     <dependency>
       <groupId>org.jboss.ws</groupId>
