@@ -52,7 +52,7 @@ import java.util.List;
  *  <tr><td>-w, --wsdlLocation=&lt;loc&gt;  </td><td>Value to use for @@WebService.wsdlLocation</td></tr>
  *  <tr><td>-o, --output=&lt;directory&gt;  </td><td>The directory to put generated artifacts</td></tr>
  *  <tr><td>-s, --source=&lt;directory&gt;  </td><td>The directory to put Java source</td></tr>
- *  <tr><td>-t, --target=&lt;2.0|2.1|2.2&gt;</td><td>The target specification target</td></tr>
+ *  <tr><td>-t, --target=&lt;2.1|2.2&gt;</td><td>The target specification target</td></tr>
  *  <tr><td>-n, --nocompile                 </td><td>Do not compile generated sources</td></tr> 
  *  <tr><td>-q, --quiet                     </td><td>Be somewhat more quiet</td></tr>
  *  <tr><td>-v, --verbose                   </td><td>Show full exception stack traces</td></tr>
@@ -313,7 +313,7 @@ public class WSConsume
       out.println("    -w  --wsdlLocation=<loc>    Value to use for @WebService.wsdlLocation");
       out.println("    -o, --output=<directory>    The directory to put generated artifacts");
       out.println("    -s, --source=<directory>    The directory to put Java source");
-      out.println("    -t, --target=<2.0|2.1|2.2>  The JAX-WS specification target");
+      out.println("    -t, --target=<2.1|2.2>      The JAX-WS specification target");
       out.println("    -q, --quiet                 Be somewhat more quiet");
       out.println("    -v, --verbose               Show full exception stack traces");
       out.println("    -l, --load-consumer         Load the consumer and exit (debug utility)");
