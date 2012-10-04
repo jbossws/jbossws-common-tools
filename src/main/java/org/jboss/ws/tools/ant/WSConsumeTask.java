@@ -54,7 +54,7 @@ import org.jboss.ws.api.tools.WSContractConsumer;
  *   <tr><td>destdir</td><td>The output directory for generated artifacts.</td><td>"output"</td></tr>
  *   <tr><td>sourcedestdir</td><td>The output directory for Java source.</td><td>value of destdir</td></tr>
  *   <tr><td>extension</td><td>Enable SOAP 1.2 binding extension.</td><td>false</td></tr>
- *   <tr><td>target</td><td>The JAX-WS specification target. Allowed values are 2.0, 2.1 and 2.2</td><td></td></tr>
+ *   <tr><td>target</td><td>The JAX-WS specification target. Allowed values are 2.1 and 2.2</td><td></td></tr>
  *   <tr><td>verbose</td><td>Enables more informational output about cmd progress.</td><td>false</td><tr>
  *   <tr><td>wsdl*</td><td>The WSDL file or URL</td><td>n/a</td><tr>
  * </table>
