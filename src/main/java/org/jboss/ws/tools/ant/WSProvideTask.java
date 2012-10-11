@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2012, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2006, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -32,6 +32,7 @@ import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.CommandlineJava.SysProperties;
+import org.apache.tools.ant.types.Environment.Variable;
 import org.jboss.ws.api.tools.WSContractProvider;
 
 import java.io.File;
@@ -54,7 +55,6 @@ import java.util.ArrayList;
  *   <tr><td>resourcedestdir</td><td>The output directory for resource artifacts (WSDL/XSD).</td><td>value of destdir</td></tr>
  *   <tr><td>sourcedestdir</td><td>The output directory for Java source.</td><td>value of destdir</td></tr>
  *   <tr><td>genwsdl</td><td>Whether or not to generate WSDL.</td><td>false</td><tr>
- *   <tr><td>address</td><td>The generated port soap:address in wsdl.</td><td></td><tr>
  *   <tr><td>extension</td><td>Enable SOAP 1.2 binding extension.</td><td>false</td></tr>
  *   <tr><td>verbose</td><td>Enables more informational output about cmd progress.</td><td>false</td><tr>
  *   <tr><td>sei</td><td>Service Endpoint Implementation.</td><td></td><tr>
@@ -88,7 +88,6 @@ import java.util.ArrayList;
  * 
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
- * @author <a href="mailto:alessio.soldano@jboss.com">Alessio Soldano</a>
  */
 public class WSProvideTask extends Task
 {
@@ -104,7 +103,6 @@ public class WSProvideTask extends Task
    private boolean verbose;
    private boolean fork;
    private boolean debug;
-   private String portSoapAddress;
    
    // Not actually used right now
    public void setDebug(boolean debug)
@@ -185,11 +183,6 @@ public class WSProvideTask extends Task
       this.genwsdl = genwsdl;
    }
    
-   public void setPortSoapAddress(String portSoapAddress)
-   {
-      this.portSoapAddress = portSoapAddress;
-   }
-   
    private ClassLoader getClasspathLoader(ClassLoader parent)
    {
 		AntClassLoader antLoader = new AntClassLoader(parent, getProject(), classpath, false);
@@ -235,7 +228,6 @@ public class WSProvideTask extends Task
          gen.setGenerateSource(keep);
          gen.setGenerateWsdl(genwsdl);
          gen.setExtension(extension);
-         gen.setPortSoapAddress(portSoapAddress);
 
          if (destdir != null)
             gen.setOutputDirectory(destdir);
@@ -294,11 +286,6 @@ public class WSProvideTask extends Task
       
       if (genwsdl)
          command.createArgument().setValue("-w");
-      
-      if (portSoapAddress != null) {
-         command.createArgument().setValue("-a");
-         command.createArgument().setValue(portSoapAddress);
-      }
       
       if (extension)
          command.createArgument().setValue("-e");

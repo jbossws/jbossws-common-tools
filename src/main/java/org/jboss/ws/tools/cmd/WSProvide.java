@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2012, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2006, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -52,7 +52,6 @@ import org.jboss.ws.api.tools.WSContractProvider;
  *  <tr><td>-o, --output=&lt;directory&gt;  </td><td>The directory to put generated artifacts</td></tr>
  *  <tr><td>-r, --resource=&lt;directory&gt;</td><td>The directory to put resource artifacts</td></tr>
  *  <tr><td>-s, --source=&lt;directory&gt;  </td><td>The directory to put Java source</td></tr>
- *  <tr><td>-a, --address=&lt;address&gt;   </td><td>The generated port soap:address in wsdl</td></tr>
  *  <tr><td>-q, --quiet                     </td><td>Be somewhat more quiet</td></tr>
  *  <tr><td>-t, --show-traces               </td><td>Show full exception stack traces</td></tr>
  *  <tr><td>-l, --load-provider             </td><td>Load the provider and exit (debug utility)</td></tr>
@@ -61,7 +60,6 @@ import org.jboss.ws.api.tools.WSContractProvider;
  * 
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
- * @author <a href="mailto:alessio.soldano@jboss.com">Alessio Soldano</a>
  */
 public class WSProvide
 {
@@ -75,7 +73,6 @@ public class WSProvide
    private boolean loadProvider;
    private File resourceDir;
    private File sourceDir;
-   private String portSoapAddress;
 
    public static final String PROGRAM_NAME = SecurityActions.getSystemProperty("program.name", WSProvide.class.getSimpleName());
 
@@ -88,7 +85,7 @@ public class WSProvide
    
    private String parseArguments(String[] args)
    {
-      String shortOpts = "hwko:r:s:a:c:qtle";
+      String shortOpts = "hwko:r:s:c:qtle";
       LongOpt[] longOpts = 
       {
          new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h'),
@@ -97,7 +94,6 @@ public class WSProvide
          new LongOpt("output", LongOpt.REQUIRED_ARGUMENT, null, 'o'),
          new LongOpt("resource", LongOpt.REQUIRED_ARGUMENT, null, 'r'),
          new LongOpt("source", LongOpt.REQUIRED_ARGUMENT, null, 's'),
-         new LongOpt("address", LongOpt.REQUIRED_ARGUMENT, null, 'a'),
          new LongOpt("classpath", LongOpt.REQUIRED_ARGUMENT, null, 'c'),
          new LongOpt("quiet", LongOpt.NO_ARGUMENT, null, 'q'),
          new LongOpt("show-traces", LongOpt.NO_ARGUMENT, null, 't'),
@@ -134,9 +130,6 @@ public class WSProvide
                break;
             case 'c':
                processClassPath(getopt.getOptarg());
-               break;
-            case 'a':
-               portSoapAddress = getopt.getOptarg();
                break;
             case 'l':
                loadProvider = true;
@@ -189,7 +182,6 @@ public class WSProvide
       gen.setGenerateSource(generateSource);
       gen.setOutputDirectory(outputDir);
       gen.setExtension(extension);
-      gen.setPortSoapAddress(portSoapAddress);
       if (resourceDir != null)
          gen.setResourceDirectory(resourceDir);
       if (sourceDir != null)
@@ -262,7 +254,6 @@ public class WSProvide
       out.println("    -h, --help                  Show this help message");
       out.println("    -k, --keep                  Keep/Generate Java source");
       out.println("    -w, --wsdl                  Enable WSDL file generation");
-      out.println("    -a, --address=<address>     The generated port soap:address in wsdl");
       out.println("    -c, --classpath=<path>      The classpath that contains the endpoint");
       out.println("    -o, --output=<directory>    The directory to put generated artifacts");
       out.println("    -r, --resource=<directory>  The directory to put resource artifacts");
