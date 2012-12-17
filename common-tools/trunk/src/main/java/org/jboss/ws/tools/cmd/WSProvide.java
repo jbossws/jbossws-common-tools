@@ -25,6 +25,7 @@ import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -195,16 +196,17 @@ public class WSProvide
       if (sourceDir != null)
          gen.setSourceDirectory(sourceDir);
 
+      boolean cleanPS = false;
+      PrintStream ps = System.out;
       if (! quiet)
       {
-         PrintStream ps;
          if (Log4JUtil.isLog4jConfigurationAvailable())
          {
             ps = new PrintStream(new Log4jOutputStream(Logger.getLogger("WSProvide"), Level.INFO));
+            cleanPS = true;
          }
          else
          {
-            ps = System.out;
             ps.println("Could not find log4j.xml configuration, logging to console.\n");
          }
          gen.setMessageStream(ps);
@@ -229,7 +231,10 @@ public class WSProvide
          {
             t.printStackTrace(System.err);
          }
-         
+      } finally {
+          if (cleanPS) {
+              ps.close();
+          }
       }
       
       return 1;
