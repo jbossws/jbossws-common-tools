@@ -232,16 +232,17 @@ public class WSConsume
       if (sourceDir != null)
          consumer.setSourceDirectory(sourceDir);
 
+      boolean cleanPS = false;
+      PrintStream ps = System.out;
       if (! quiet)
       {
-         PrintStream ps;
          if (Log4JUtil.isLog4jConfigurationAvailable())
          {
             ps = new PrintStream(new Log4jOutputStream(Logger.getLogger("WSConsume"), Level.INFO));
+            cleanPS = true;
          }
          else
          {
-            ps = System.out;
             ps.println("Could not find log4j.xml configuration, logging to console.\n");
          }
          consumer.setMessageStream(ps);
@@ -293,7 +294,10 @@ public class WSConsume
          {
             t.printStackTrace(System.err);
          }
-
+      } finally {
+          if (cleanPS) {
+              ps.close();
+          }
       }
 
       return 1;
