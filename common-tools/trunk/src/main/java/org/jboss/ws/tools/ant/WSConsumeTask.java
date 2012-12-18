@@ -193,6 +193,7 @@ public class WSConsumeTask extends Task
       ClassLoader prevCL = SecurityActions.getContextClassLoader();
       ClassLoader antLoader = SecurityActions.getClassLoader(this.getClass());
       SecurityActions.setContextClassLoader(antLoader);
+      PrintStream ps = null;
       try
       {
          WSContractConsumer consumer = WSContractConsumer.newInstance();
@@ -228,7 +229,8 @@ public class WSConsumeTask extends Task
 
          if (verbose)
          {
-            consumer.setMessageStream(new PrintStream(new LogOutputStream(this, Project.MSG_INFO)));
+            ps = new PrintStream(new LogOutputStream(this, Project.MSG_INFO));
+            consumer.setMessageStream(ps);
          }
 
          try
@@ -243,6 +245,9 @@ public class WSConsumeTask extends Task
       }
       finally
       {
+         if (ps != null) {
+            ps.close();
+         }
          SecurityActions.setContextClassLoader(prevCL);
       }
    }
