@@ -118,4 +118,12 @@ public class CmdConsumeTracker extends WSContractConsumer
    {
       LAST_EVENT += "setNoCompile";
    }
+
+   @Override
+   public void setClientJar(File clientJar)
+   {
+
+      LAST_EVENT += "setClientJar";
+      
+   }
 }
