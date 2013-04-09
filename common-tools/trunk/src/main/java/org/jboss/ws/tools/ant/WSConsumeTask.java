@@ -48,6 +48,7 @@ import org.jboss.ws.api.tools.WSContractConsumer;
  *   <tr><td>fork</td><td>Whether or not to run the generation task in a separate VM.</td><td>true</td></tr>
  *   <tr><td>keep</td><td>Keep/Enable Java source code generation.</td><td>false</td></tr>
  *   <tr><td>catalog</td><td> Oasis XML Catalog file for entity resolution</td><td>none</td></tr>
+ *   <tr><td>clientjar</td><td>Gnerate the client jar of generated artifacts for calling a webservice</td><td>none</td></tr>
  *   <tr><td>package</td><td> The target Java package for generated code.</td><td>generated</td></tr>
  *   <tr><td>binding</td><td>A JAX-WS or JAXB binding file</td><td>none</td></tr>
  *   <tr><td>wsdlLocation</td><td>Value to use for @@WebService.wsdlLocation</td><td>generated</td></tr>
@@ -86,6 +87,7 @@ public class WSConsumeTask extends Task
    private File sourcedestdir;
    private List<File> bindingFiles = new ArrayList<File>();
    private File catalog;
+   private File clientjar;
    private String wsdlLocation;
    private String targetPackage;
    private boolean keep;
@@ -116,6 +118,11 @@ public class WSConsumeTask extends Task
    public void setCatalog(File catalog)
    {
       this.catalog = catalog;
+   }
+   
+   public void setClientJar(File clientJar)
+   {
+      this.clientjar = clientJar;
    }
 
    public void setDestdir(File destdir)
@@ -209,6 +216,8 @@ public class WSConsumeTask extends Task
             consumer.setTargetPackage(targetPackage);
          if (wsdlLocation != null)
             consumer.setWsdlLocation(wsdlLocation);
+         if (clientjar != null)
+            consumer.setClientJar(clientjar);
          if (catalog != null)
          {
             if (catalog.exists() && catalog.isFile())
@@ -314,6 +323,12 @@ public class WSConsumeTask extends Task
       {
          command.createArgument().setValue("-c");
          command.createArgument().setFile(catalog);
+      }
+      
+      if (clientjar != null)
+      {
+         command.createArgument().setValue("-j");
+         command.createArgument().setFile(clientjar);
       }
 
       if (targetPackage != null)

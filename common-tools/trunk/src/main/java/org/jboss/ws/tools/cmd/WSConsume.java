@@ -49,6 +49,7 @@ import java.util.List;
  *  <tr><td>-k, --keep                      </td><td>Keep/Generate Java source</td></tr>
  *  <tr><td>-c, --catalog=&lt;file&gt;      </td><td>Oasis XML Catalog file for entity resolution</td></tr>
  *  <tr><td>-p, --package=&lt;name&gt;      </td><td>The target package for generated source</td></tr>
+ *  <tr><td>-j, --clientjar=&lt;name&gt;   </td><td>Create a jar file of the generated artifacts for calling the webservice</td></tr>
  *  <tr><td>-w, --wsdlLocation=&lt;loc&gt;  </td><td>Value to use for @@WebService.wsdlLocation</td></tr>
  *  <tr><td>-o, --output=&lt;directory&gt;  </td><td>The directory to put generated artifacts</td></tr>
  *  <tr><td>-s, --source=&lt;directory&gt;  </td><td>The directory to put Java source</td></tr>
@@ -79,6 +80,7 @@ public class WSConsume
    private boolean additionalHeaders;
    private boolean noCompile;
    private File sourceDir;
+   private File clientJar;
    private String target;
    
    public static final String PROGRAM_NAME = SecurityActions.getSystemProperty("program.name", WSConsume.class.getName());
@@ -106,7 +108,7 @@ public class WSConsume
 
    private URL parseArguments(String[] args)
    {
-      String shortOpts = "b:c:p:w:o:s:t:khqvlnea";
+      String shortOpts = "b:c:p:w:o:s:t:j:khqvlnea";
       LongOpt[] longOpts =
       {
          new LongOpt("binding", LongOpt.REQUIRED_ARGUMENT, null, 'b'),
@@ -124,6 +126,7 @@ public class WSConsume
          new LongOpt("extension", LongOpt.NO_ARGUMENT, null, 'e'),
          new LongOpt("additionalHeaders", LongOpt.NO_ARGUMENT, null, 'a'),
          new LongOpt("load-consumer", LongOpt.NO_ARGUMENT, null, 'l'),
+         new LongOpt("clientjar", LongOpt.REQUIRED_ARGUMENT, null, 'j'),
       };
 
       Getopt getopt = new Getopt(PROGRAM_NAME, args, shortOpts, longOpts);
@@ -153,6 +156,9 @@ public class WSConsume
             case 's':
                sourceDir = new File(getopt.getOptarg());
                break;
+            case 'j':
+               clientJar = new File(getopt.getOptarg());
+               break;   
             case 't':
                target = getopt.getOptarg();
                break;
@@ -231,6 +237,9 @@ public class WSConsume
       consumer.setAdditionalHeaders(additionalHeaders);
       if (sourceDir != null)
          consumer.setSourceDirectory(sourceDir);
+      if (clientJar != null) {
+         consumer.setClientJar(clientJar);
+      }
 
       boolean cleanPS = false;
       PrintStream ps = System.out;
@@ -313,6 +322,7 @@ public class WSConsume
       out.println("    -b, --binding=<file>        One or more JAX-WS or JAXB binding files ");
       out.println("    -k, --keep                  Keep/Generate Java source");
       out.println("    -c  --catalog=<file>        Oasis XML Catalog file for entity resolution");
+      out.println("    -j  --clientjar=<name>      Create a jar file of the generated artifacts for calling the webservice");
       out.println("    -p  --package=<name>        The target package for generated source");
       out.println("    -w  --wsdlLocation=<loc>    Value to use for @WebService.wsdlLocation");
       out.println("    -o, --output=<directory>    The directory to put generated artifacts");
