@@ -50,8 +50,8 @@
       <version>${jbossws.spi.version}</version>
     </dependency>
     <dependency>
-      <groupId>gnu-getopt</groupId>
-      <artifactId>getopt</artifactId>
+      <groupId>gnu.getopt</groupId>
+      <artifactId>java-getopt</artifactId>
       <version>${getopt.version}</version>
     </dependency>
     <dependency>
