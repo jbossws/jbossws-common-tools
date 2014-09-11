@@ -76,6 +76,12 @@ public class CmdConsumeTracker extends WSContractConsumer
    {
       LAST_EVENT += "setWsdlLocation";
    }
+   
+   @Override
+   public void setEncoding(String encoding)
+   {
+      LAST_EVENT += "setEncoding";
+   }
 
    @Override
    public void setMessageStream(PrintStream messageStream)

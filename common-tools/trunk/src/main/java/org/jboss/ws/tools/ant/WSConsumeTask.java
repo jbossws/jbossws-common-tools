@@ -89,6 +89,7 @@ public class WSConsumeTask extends Task
    private File catalog;
    private File clientjar;
    private String wsdlLocation;
+   private String encoding;
    private String targetPackage;
    private boolean keep;
    private boolean extension;
@@ -185,6 +186,11 @@ public class WSConsumeTask extends Task
       this.wsdlLocation = wsdlLocation;
    }
 
+   public void setEncoding(String encoding)
+   {
+      this.encoding = encoding;
+   }
+
    public void addConfiguredBinding(FileSet fs)
    {
       DirectoryScanner ds = fs.getDirectoryScanner(getProject());
@@ -218,6 +224,8 @@ public class WSConsumeTask extends Task
             consumer.setWsdlLocation(wsdlLocation);
          if (clientjar != null)
             consumer.setClientJar(clientjar);
+         if (encoding != null)
+            consumer.setEncoding(encoding);
          if (catalog != null)
          {
             if (catalog.exists() && catalog.isFile())
@@ -341,6 +349,12 @@ public class WSConsumeTask extends Task
       {
          command.createArgument().setValue("-w");
          command.createArgument().setValue(wsdlLocation);
+      }
+      
+      if (encoding != null)
+      {
+         command.createArgument().setValue("--encoding");
+         command.createArgument().setValue(encoding);
       }
 
       if (destdir != null)
