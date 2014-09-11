@@ -49,17 +49,18 @@ import java.util.List;
  *  <tr><td>-k, --keep                      </td><td>Keep/Generate Java source</td></tr>
  *  <tr><td>-c, --catalog=&lt;file&gt;      </td><td>Oasis XML Catalog file for entity resolution</td></tr>
  *  <tr><td>-p, --package=&lt;name&gt;      </td><td>The target package for generated source</td></tr>
- *  <tr><td>-j, --clientjar=&lt;name&gt;   </td><td>Create a jar file of the generated artifacts for calling the webservice</td></tr>
+ *  <tr><td>-j, --clientjar=&lt;name&gt;    </td><td>Create a jar file of the generated artifacts for calling the webservice</td></tr>
  *  <tr><td>-w, --wsdlLocation=&lt;loc&gt;  </td><td>Value to use for @@WebService.wsdlLocation</td></tr>
  *  <tr><td>-o, --output=&lt;directory&gt;  </td><td>The directory to put generated artifacts</td></tr>
  *  <tr><td>-s, --source=&lt;directory&gt;  </td><td>The directory to put Java source</td></tr>
- *  <tr><td>-t, --target=&lt;2.1|2.2&gt;</td><td>The target specification target</td></tr>
+ *  <tr><td>-t, --target=&lt;2.1|2.2&gt;    </td><td>The target specification target</td></tr>
  *  <tr><td>-n, --nocompile                 </td><td>Do not compile generated sources</td></tr> 
  *  <tr><td>-q, --quiet                     </td><td>Be somewhat more quiet</td></tr>
  *  <tr><td>-v, --verbose                   </td><td>Show full exception stack traces</td></tr>
  *  <tr><td>-l, --load-consumer             </td><td>Load the consumer and exit (debug utility)</td></tr>
  *  <tr><td>-e, --extension                 </td><td>Enable SOAP 1.2 binding extension</td></tr>
- *  <tr><td>-a, --additionalHeaders         </td><td>Enable SOAP 1.2 binding extension</td></tr>
+ *  <tr><td>-a, --additionalHeaders         </td><td>Enable processing of implicit SOAP headers</td></tr>
+ *  <tr><td>-d, --encoding=&lt;charset&gt;  </td><td>The charset encoding to use for generated sources</td></tr>
  *  </table>
  * </pre>
  *
@@ -73,6 +74,7 @@ public class WSConsume
    private File catalog;
    private String targetPackage;
    private String wsdlLocation;
+   private String encoding;
    private boolean quiet;
    private boolean verbose;
    private boolean loadConsumer;
@@ -108,7 +110,7 @@ public class WSConsume
 
    private URL parseArguments(String[] args)
    {
-      String shortOpts = "b:c:p:w:o:s:t:j:khqvlnea";
+      String shortOpts = "b:c:p:w:d:o:s:t:j:khqvlnea";
       LongOpt[] longOpts =
       {
          new LongOpt("binding", LongOpt.REQUIRED_ARGUMENT, null, 'b'),
@@ -127,6 +129,7 @@ public class WSConsume
          new LongOpt("additionalHeaders", LongOpt.NO_ARGUMENT, null, 'a'),
          new LongOpt("load-consumer", LongOpt.NO_ARGUMENT, null, 'l'),
          new LongOpt("clientjar", LongOpt.REQUIRED_ARGUMENT, null, 'j'),
+         new LongOpt("encoding", LongOpt.REQUIRED_ARGUMENT, null, 'd'),
       };
 
       Getopt getopt = new Getopt(PROGRAM_NAME, args, shortOpts, longOpts);
@@ -149,6 +152,9 @@ public class WSConsume
                break;
             case 'w':
                wsdlLocation = getopt.getOptarg();
+               break;
+            case 'd':
+               encoding = getopt.getOptarg();
                break;
             case 'o':
                outputDir = new File(getopt.getOptarg());
@@ -274,6 +280,9 @@ public class WSConsume
 
       if (wsdlLocation != null)
          consumer.setWsdlLocation(wsdlLocation);
+      
+      if (encoding != null)
+         consumer.setEncoding(encoding);
 
       if (bindingFiles != null && bindingFiles.size() > 0)
          consumer.setBindingFiles(bindingFiles);
@@ -333,6 +342,7 @@ public class WSConsume
       out.println("    -l, --load-consumer         Load the consumer and exit (debug utility)");
       out.println("    -e, --extension             Enable SOAP 1.2 binding extension");
       out.println("    -a, --additionalHeaders     Enable processing of implicit SOAP headers");
+      out.println("    -d  --encoding=<charset>    The charset encoding to use for generated sources");
       out.println("    -n, --nocompile             Do not compile generated sources");
       out.flush();
    }
