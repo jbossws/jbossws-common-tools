@@ -104,7 +104,7 @@ public class WSProvideTask extends Task
    private boolean verbose;
    private boolean fork;
    private boolean debug;
-   private String portSoapAddress;
+   private String address;
    
    // Not actually used right now
    public void setDebug(boolean debug)
@@ -185,9 +185,9 @@ public class WSProvideTask extends Task
       this.genwsdl = genwsdl;
    }
    
-   public void setPortSoapAddress(String portSoapAddress)
+   public void setAddress(String address)
    {
-      this.portSoapAddress = portSoapAddress;
+      this.address = address;
    }
    
    private ClassLoader getClasspathLoader(ClassLoader parent)
@@ -238,7 +238,7 @@ public class WSProvideTask extends Task
          gen.setGenerateSource(keep);
          gen.setGenerateWsdl(genwsdl);
          gen.setExtension(extension);
-         gen.setPortSoapAddress(portSoapAddress);
+         gen.setPortSoapAddress(address);
 
          if (destdir != null)
             gen.setOutputDirectory(destdir);
@@ -301,9 +301,9 @@ public class WSProvideTask extends Task
       if (genwsdl)
          command.createArgument().setValue("-w");
       
-      if (portSoapAddress != null) {
+      if (address != null) {
          command.createArgument().setValue("-a");
-         command.createArgument().setValue(portSoapAddress);
+         command.createArgument().setValue(address);
       }
       
       if (extension)
