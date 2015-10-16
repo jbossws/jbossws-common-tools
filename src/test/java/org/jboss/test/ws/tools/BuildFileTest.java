@@ -225,22 +225,14 @@ public abstract class BuildFileTest extends TestCase {
    }
 
    private String cleanBuffer(StringBuffer buffer) {
-      StringBuffer cleanedBuffer = new StringBuffer();
-      boolean cr = false;
-      for (int i = 0; i < buffer.length(); i++) {
-         char ch = buffer.charAt(i);
-         if (ch == '\r') {
-            cr = true;
-            continue;
-         }
-
-         if (!cr) {
-            cleanedBuffer.append(ch);
-         } else {
-            cleanedBuffer.append(ch);
-         }
-      }
-      return cleanedBuffer.toString();
+       StringBuffer cleanedBuffer = new StringBuffer();
+       for (int i = 0; i < buffer.length(); i++) {
+           char ch = buffer.charAt(i);
+           if (ch != '\r') {
+               cleanedBuffer.append(ch);
+           }
+       }
+       return cleanedBuffer.toString();
    }
 
    /**
