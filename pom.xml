@@ -14,18 +14,17 @@
   <parent>
     <groupId>org.jboss.ws</groupId>
     <artifactId>jbossws-parent</artifactId>
-    <version>1.2.0.Final</version>
+    <version>1.3.1-SNAPSHOT</version>
   </parent>
 
   <scm>
     <connection>scm:git:https://github.com/jbossws/jbossws-common-tools.git</connection>
     <developerConnection>scm:git:https://github.com/jbossws/jbossws-common-tools.git</developerConnection>
     <url>https://github.com/jbossws/jbossws-common-tools</url>
-    <tag>HEAD</tag>
   </scm>
 
   <properties>
-    <jbossws.api.version>1.0.3.Final</jbossws.api.version>
+    <jbossws.api.version>1.0.4-SNAPSHOT</jbossws.api.version>
     <ant.version>1.7.1</ant.version>
     <getopt.version>1.0.13</getopt.version>
     <junit.version>3.8.2</junit.version>
@@ -34,25 +33,27 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.jboss.ws</groupId>
+      <artifactId>jbossws-api</artifactId>
+      <version>${jbossws.api.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.apache.ant</groupId>
       <artifactId>ant</artifactId>
       <version>${ant.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.jboss.ws</groupId>
-      <artifactId>jbossws-api</artifactId>
-      <version>${jbossws.api.version}</version>
-    </dependency>
-    <dependency>
       <groupId>gnu.getopt</groupId>
       <artifactId>java-getopt</artifactId>
       <version>${getopt.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
       <version>${log4j.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -61,18 +62,5 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-release-plugin</artifactId>
-        <version>2.5.2</version>
-        <configuration>
-          <autoVersionSubmodules>true</autoVersionSubmodules>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 
 </project>
