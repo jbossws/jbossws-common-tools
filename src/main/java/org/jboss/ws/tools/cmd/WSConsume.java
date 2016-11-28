@@ -258,7 +258,7 @@ public class WSConsume
          }
          else
          {
-            ps.println("Could not find log4j.xml configuration, logging to console.\n");
+            ps.println("Could not find log4j.properties or log4j.xml configuration, logging to console.\n");
          }
          consumer.setMessageStream(ps);
       }
