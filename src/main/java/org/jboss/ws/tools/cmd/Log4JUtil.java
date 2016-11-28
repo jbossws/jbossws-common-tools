@@ -23,7 +23,9 @@ package org.jboss.ws.tools.cmd;
 
 import java.net.URL;
 
+import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.helpers.Loader;
+import org.apache.log4j.xml.DOMConfigurator;
 
 /**
  * 
@@ -35,7 +37,7 @@ final class Log4JUtil
 {
    public static final String LOG4J_CONFIGURATION = "log4j.configuration";
    public static final String LOG4J_PROPERTIES = "log4j.properties";
-   
+
    private Log4JUtil()
    {
       // forbidden instantiation
@@ -54,12 +56,14 @@ final class Log4JUtil
       try
       {
          url = new URL(resource);
+         loadConfiguration(url);
       }
       catch (Exception e1)
       {
          try
          {
             url = Loader.getResource(resource);
+            loadConfiguration(url);
          }
          catch (Exception e2)
          {
@@ -67,5 +71,17 @@ final class Log4JUtil
          }
       }
       return url != null;
+   }
+
+   private static void loadConfiguration(URL log4jConfigurationFile) {
+      if (log4jConfigurationFile == null) {
+         return;
+      }
+
+      if (log4jConfigurationFile.getFile().endsWith(".xml")) {
+         DOMConfigurator.configure(log4jConfigurationFile);
+      } else {
+         PropertyConfigurator.configure(log4jConfigurationFile);
+      }
    }
 }
