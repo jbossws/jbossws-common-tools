@@ -335,15 +335,8 @@ public class WSProvideTask extends Task
       if (verbose)
          log("Command invoked: " + command.getJavaCommand().toString());
       
-      ExecuteJava execute = new ExecuteJava();
-      execute.setClasspath(path);
-      execute.setJavaCommand(command.getJavaCommand());
-
-      // propagate system properties (useful e.g. for endorsing)
-      String[] arguments = command.getVmCommand().getArguments();
-      SysProperties properties = AntTaskHelper.toSystemProperties(arguments);
-      execute.setSystemProperties(properties);
-
+      CustomExecuteJava execute = new CustomExecuteJava();
+      execute.setCommandlineJava(command);
       if (execute.fork(this) != 0)
          throw new BuildException("Could not invoke WSProvideTask", getLocation());
    }

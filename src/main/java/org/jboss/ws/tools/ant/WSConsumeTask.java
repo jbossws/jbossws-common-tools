@@ -31,13 +31,11 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.ExecuteJava;
 import org.apache.tools.ant.taskdefs.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.CommandlineJava.SysProperties;
 import org.jboss.ws.api.tools.WSContractConsumer;
 
 /**
@@ -385,16 +383,10 @@ public class WSConsumeTask extends Task
       if (verbose)
          log("Command invoked: " + command.getJavaCommand().toString());
 
-      ExecuteJava execute = new ExecuteJava();
-      execute.setClasspath(path);
-      execute.setJavaCommand(command.getJavaCommand());
-
-      // propagate system properties (useful e.g. for endorsing)
-      String[] arguments = command.getVmCommand().getArguments();
-      SysProperties properties = AntTaskHelper.toSystemProperties(arguments);
-      execute.setSystemProperties(properties);
-
+      CustomExecuteJava execute = new CustomExecuteJava();
+      execute.setCommandlineJava(command);
       if (execute.fork(this) != 0)
          throw new BuildException("Could not invoke WSConsumeTask", getLocation());
    }
+   
 }
