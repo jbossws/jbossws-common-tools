@@ -56,6 +56,7 @@ import org.jboss.ws.api.tools.WSContractProvider;
  *  <tr><td>-a, --address=&lt;address&gt;   </td><td>The generated port soap:address in wsdl</td></tr>
  *  <tr><td>-q, --quiet                     </td><td>Be somewhat more quiet</td></tr>
  *  <tr><td>-t, --show-traces               </td><td>Show full exception stack traces</td></tr>
+ *  <tr><td>-v, --verbose                   </td><td>Show full exception stack traces</td></tr>
  *  <tr><td>-l, --load-provider             </td><td>Load the provider and exit (debug utility)</td></tr>
  *  <tr><td>-e, --extension                 </td><td>Enable SOAP 1.2 binding extension</td></tr>
  * </pre>
@@ -73,6 +74,7 @@ public class WSProvide
    private boolean extension;
    private boolean quiet;
    private boolean showTraces;
+   private boolean verbose;
    private boolean loadProvider;
    private File resourceDir;
    private File sourceDir;
@@ -102,6 +104,7 @@ public class WSProvide
          new LongOpt("classpath", LongOpt.REQUIRED_ARGUMENT, null, 'c'),
          new LongOpt("quiet", LongOpt.NO_ARGUMENT, null, 'q'),
          new LongOpt("show-traces", LongOpt.NO_ARGUMENT, null, 't'),
+         new LongOpt("verbose", LongOpt.NO_ARGUMENT, null, 'v'),
          new LongOpt("load-provider", LongOpt.NO_ARGUMENT, null, 'l'),
          new LongOpt("extension", LongOpt.NO_ARGUMENT, null, 'e'),
       };
@@ -126,6 +129,9 @@ public class WSProvide
                break;
             case 't':
                showTraces = true;
+               break;
+            case 'v':
+               verbose = true;
                break;
             case 'o':
                outputDir = new File(getopt.getOptarg());
@@ -219,8 +225,8 @@ public class WSProvide
       }
       catch (Throwable t)
       {
-         System.err.println("Error: Could not generate. (use --show-traces to see full traces)");
-         if (!showTraces)
+         System.err.println("Error: Could not generate. (use --show-traces or --verbose to see full traces)");
+         if (!showTraces && !verbose)
          {
             String message = t.getMessage();
             if (message == null)
@@ -275,6 +281,7 @@ public class WSProvide
       out.println("    -e, --extension             Enable SOAP 1.2 binding extension");
       out.println("    -q, --quiet                 Be somewhat more quiet");
       out.println("    -t, --show-traces           Show full exception stack traces");
+      out.println("    -v, --verbose               Show full exception stack traces");
       out.println("    -l, --load-provider         Load the provider and exit (debug utility)");
       out.flush();
    }
