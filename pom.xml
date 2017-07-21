@@ -31,6 +31,14 @@
     <log4j.version>1.2.14</log4j.version>
   </properties>
 
+  <!-- licenses -->
+  <licenses>
+    <license>
+      <name>GNU Lesser General Public License v2.1 only</name>
+      <url>http://repository.jboss.org/licenses/lgpl-2.1.txt</url>
+    </license>
+  </licenses>
+
   <dependencies>
     <dependency>
       <groupId>org.jboss.ws</groupId>
