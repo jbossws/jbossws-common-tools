@@ -33,8 +33,8 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Level;
 
 import org.jboss.ws.api.tools.WSContractProvider;
 
@@ -208,7 +208,7 @@ public class WSProvide
       {
          if (Log4JUtil.isLog4jConfigurationAvailable())
          {
-            ps = new PrintStream(new Log4jOutputStream(Logger.getLogger("WSProvide"), Level.INFO));
+            ps = new PrintStream(new Log4jOutputStream(LogManager.getLogger("WSProvide"), Level.INFO));
             cleanPS = true;
          }
          else
