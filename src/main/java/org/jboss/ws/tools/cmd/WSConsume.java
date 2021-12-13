@@ -24,8 +24,8 @@ package org.jboss.ws.tools.cmd;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Level;
 
 import org.jboss.ws.api.tools.WSContractConsumer;
 
@@ -253,7 +253,7 @@ public class WSConsume
       {
          if (Log4JUtil.isLog4jConfigurationAvailable())
          {
-            ps = new PrintStream(new Log4jOutputStream(Logger.getLogger("WSConsume"), Level.INFO));
+            ps = new PrintStream(new Log4jOutputStream(LogManager.getLogger("WSConsume"), Level.INFO));
             cleanPS = true;
          }
          else
