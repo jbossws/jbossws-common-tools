@@ -23,8 +23,8 @@ package org.jboss.ws.tools.cmd;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import org.apache.log4j.Category;
-import org.apache.log4j.Priority;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Level;
 
 /**
  * An OutputStream that flushes out to a Category.<p>
@@ -74,16 +74,12 @@ final class Log4jOutputStream extends OutputStream
     * The default number of bytes in the buffer. =2048
     */
    public static final int DEFAULT_BUFFER_LENGTH = 2048;
+   protected Logger localLogger;
 
    /**
-    * The category to write to.
+    * The priority to use when writing to the log.
     */
-   protected Category category;
-
-   /**
-    * The priority to use when writing to the Category.
-    */
-   protected Priority priority;
+   protected Level priority;
 
    @SuppressWarnings("unused")
    private Log4jOutputStream()
@@ -91,21 +87,22 @@ final class Log4jOutputStream extends OutputStream
       // illegal
    }
 
+
    /**
-    * Creates the LoggingOutputStream to flush to the given Category.
-    * 
-    * @param cat        the Category to write to
-    * 
-    * @param priority   the Priority to use when writing to the Category
-    * 
+    * Creates the LoggingOutputStream to flush to the given log.
+    *
+    * @param log        the log to write to
+    *
+    * @param priority   the priority to use when writing to the log
+    *
     * @exception IllegalArgumentException
-    *                   if cat == null or priority == null
+    *                   if log == null or priority == null
     */
-   public Log4jOutputStream(Category cat, Priority priority) throws IllegalArgumentException
+   public Log4jOutputStream(Logger log, Level priority) throws IllegalArgumentException
    {
-      if (cat == null)
+      if (log == null)
       {
-         throw new IllegalArgumentException("cat == null");
+         throw new IllegalArgumentException("log == null");
       }
       if (priority == null)
       {
@@ -113,7 +110,7 @@ final class Log4jOutputStream extends OutputStream
       }
 
       this.priority = priority;
-      category = cat;
+      localLogger = log;
       bufLength = DEFAULT_BUFFER_LENGTH;
       buf = new byte[DEFAULT_BUFFER_LENGTH];
       count = 0;
@@ -205,8 +202,7 @@ final class Log4jOutputStream extends OutputStream
 
       System.arraycopy(buf, 0, theBytes, 0, count);
 
-      category.log(priority, new String(theBytes));
-
+      localLogger.log(priority, new String(theBytes));
       reset();
    }
 

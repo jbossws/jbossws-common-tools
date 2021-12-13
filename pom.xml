@@ -29,7 +29,7 @@
     <ant.version>1.10.9</ant.version>
     <getopt.version>1.0.13</getopt.version>
     <junit.version>3.8.2</junit.version>
-    <log4j.version>1.2.14</log4j.version>
+    <log4j.version>2.15.0</log4j.version>
   </properties>
 
   <!-- licenses -->
@@ -59,8 +59,14 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>${log4j.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
       <version>${log4j.version}</version>
       <scope>provided</scope>
     </dependency>

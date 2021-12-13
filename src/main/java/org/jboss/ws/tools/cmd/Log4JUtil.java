@@ -21,11 +21,11 @@
  */
 package org.jboss.ws.tools.cmd;
 
+import java.net.URISyntaxException;
 import java.net.URL;
 
-import org.apache.log4j.PropertyConfigurator;
-import org.apache.log4j.helpers.Loader;
-import org.apache.log4j.xml.DOMConfigurator;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.util.Loader;
 
 /**
  * 
@@ -62,7 +62,7 @@ final class Log4JUtil
       {
          try
          {
-            url = Loader.getResource(resource);
+            url = Loader.getResource(resource, null);
             loadConfiguration(url);
          }
          catch (Exception e2)
@@ -73,15 +73,11 @@ final class Log4JUtil
       return url != null;
    }
 
-   private static void loadConfiguration(URL log4jConfigurationFile) {
+   private static void loadConfiguration(URL log4jConfigurationFile) throws URISyntaxException {
       if (log4jConfigurationFile == null) {
          return;
       }
 
-      if (log4jConfigurationFile.getFile().endsWith(".xml")) {
-         DOMConfigurator.configure(log4jConfigurationFile);
-      } else {
-         PropertyConfigurator.configure(log4jConfigurationFile);
-      }
+      LoggerContext.getContext().setConfigLocation(log4jConfigurationFile.toURI());
    }
 }
