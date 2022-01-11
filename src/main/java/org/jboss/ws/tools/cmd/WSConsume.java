@@ -24,9 +24,6 @@ package org.jboss.ws.tools.cmd;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Level;
-
 import org.jboss.ws.api.tools.WSContractConsumer;
 
 import java.io.File;
@@ -247,19 +244,9 @@ public class WSConsume
          consumer.setClientJar(clientJar);
       }
 
-      boolean cleanPS = false;
       PrintStream ps = System.out;
       if (! quiet)
       {
-         if (Log4JUtil.isLog4jConfigurationAvailable())
-         {
-            ps = new PrintStream(new Log4jOutputStream(LogManager.getLogger("WSConsume"), Level.INFO));
-            cleanPS = true;
-         }
-         else
-         {
-            ps.println("Could not find log4j.properties or log4j.xml configuration, logging to console.\n");
-         }
          consumer.setMessageStream(ps);
       }
 
@@ -312,10 +299,6 @@ public class WSConsume
          {
             t.printStackTrace(System.err);
          }
-      } finally {
-          if (cleanPS) {
-              ps.close();
-          }
       }
 
       return 1;
