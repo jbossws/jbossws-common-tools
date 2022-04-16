@@ -25,7 +25,7 @@
   </scm>
 
   <properties>
-    <jbossws.api.version>2.0.0-SNAPSHOT</jbossws.api.version>
+    <jbossws.api.version>2.0.1-SNAPSHOT</jbossws.api.version>
     <ant.version>1.10.9</ant.version>
     <getopt.version>1.0.13</getopt.version>
     <junit.version>3.8.2</junit.version>
