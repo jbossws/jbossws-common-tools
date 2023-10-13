@@ -50,7 +50,6 @@ import org.jboss.ws.api.tools.WSContractConsumer;
  *   <tr><td>destdir</td><td>The output directory for generated artifacts.</td><td>"output"</td></tr>
  *   <tr><td>sourcedestdir</td><td>The output directory for Java source.</td><td>value of destdir</td></tr>
  *   <tr><td>extension</td><td>Enable SOAP 1.2 binding extension.</td><td>false</td></tr>
- *   <tr><td>target</td><td>The JAX-WS specification target. Allowed values are 2.1 and 2.2</td><td></td></tr>
  *   <tr><td>verbose</td><td>Enables more informational output about cmd progress.</td><td>false</td><tr>
  *   <tr><td>wsdl*</td><td>The WSDL file or URL</td><td>n/a</td><tr>
  * </table>
@@ -93,7 +92,6 @@ public class WSConsumeTask extends Task
    private boolean debug;
    private boolean nocompile;
    private boolean additionalHeaders;
-   private String target;
 
    // Not actually used right now
    public void setDebug(boolean debug)
@@ -149,11 +147,6 @@ public class WSConsumeTask extends Task
    public void setSourcedestdir(File sourcedestdir)
    {
       this.sourcedestdir = sourcedestdir;
-   }
-
-   public void setTarget(String target)
-   {
-      this.target = target;
    }
 
    public void setPackage(String targetPackage)
@@ -234,8 +227,6 @@ public class WSConsumeTask extends Task
          }
          if (bindingFiles != null && bindingFiles.size() > 0)
             consumer.setBindingFiles(bindingFiles);
-         if (target != null)
-            consumer.setTarget(target);
 
          log("Consuming wsdl: " + wsdl, Project.MSG_INFO);
 
@@ -362,12 +353,6 @@ public class WSConsumeTask extends Task
       {
          command.createArgument().setValue("-s");
          command.createArgument().setFile(sourcedestdir);
-      }
-
-      if (target != null)
-      {
-         command.createArgument().setValue("-t");
-         command.createArgument().setValue(target);
       }
 
       if (verbose)
