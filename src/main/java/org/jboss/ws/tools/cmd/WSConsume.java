@@ -275,13 +275,13 @@ public class WSConsume
       }
       catch (Throwable t)
       {
-         System.err.println("Error: Could not import. (use --verbose to see full traces)");
+         System.err.println("Error: Could not import");
          if (!verbose)
          {
             String message = t.getMessage();
             if (message == null)
                message = t.getClass().getSimpleName();
-            System.err.println("Error: " + message);
+            System.err.println("Error: " + message + " (use --verbose to see full traces)");
          }
          else
          {
