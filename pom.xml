@@ -26,7 +26,7 @@
 
   <properties>
     <jbossws.api.version>3.0.0.Final</jbossws.api.version>
-    <ant.version>1.10.13</ant.version>
+    <ant.version>1.10.15</ant.version>
     <getopt.version>1.0.13</getopt.version>
     <junit.version>4.13.2</junit.version>
   </properties>
