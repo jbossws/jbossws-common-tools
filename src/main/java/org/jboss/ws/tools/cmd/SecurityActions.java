@@ -18,15 +18,14 @@
  */
 package org.jboss.ws.tools.cmd;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
+import org.jboss.ws.tools.security.legacy.SecurityManagerUtils;
 
 /**
- * Security actions for this package
- * 
+ * Security actions for this package.
+ * Keep both pre-JDK23 (with SecurityManager) and JDK23+ (without SecurityManager) approach
+ *
  * @author alessio.soldano@jboss.com
+ * @author fburzigo@ibm.com
  * @since 19-Jun-2009
  *
  */
@@ -39,22 +38,32 @@ class SecurityActions
     */
    static ClassLoader getContextClassLoader()
    {
-      SecurityManager sm = System.getSecurityManager();
-      if (sm == null)
+      if (!SecurityManagerUtils.isSecurityManagerAvailable())
       {
          return Thread.currentThread().getContextClassLoader();
       }
       else
       {
-         return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-            public ClassLoader run()
-            {
-               return Thread.currentThread().getContextClassLoader();
-            }
-         });
+         return doPrivilegedGetContextClassLoader();
       }
    }
-   
+
+   /**
+    * Separate helper method to execute privileged action for getting context classloader, using FQN for
+    * deprecated/removed APIs, and avoid class loading issues on JDK 23+
+    */
+   @SuppressWarnings("removal")
+   private static ClassLoader doPrivilegedGetContextClassLoader()
+   {
+      return java.security.AccessController.doPrivileged(
+              new java.security.PrivilegedAction<ClassLoader>() {
+                 public ClassLoader run()
+                 {
+                    return Thread.currentThread().getContextClassLoader();
+                 }
+              });
+   }
+
    /**
     * Set context classloader.
     *
@@ -62,78 +71,71 @@ class SecurityActions
     */
    static void setContextClassLoader(final ClassLoader classLoader)
    {
-      if (System.getSecurityManager() == null)
+      if (!SecurityManagerUtils.isSecurityManagerAvailable())
       {
          Thread.currentThread().setContextClassLoader(classLoader);
       }
       else
       {
-         AccessController.doPrivileged(new PrivilegedAction<Object>()
-         {
-            public Object run()
-            {
-               Thread.currentThread().setContextClassLoader(classLoader);
-               return null;
-            }
-         });
+         SecurityManagerUtils.doPrivilegedSetContextClassLoader(classLoader);
       }
    }
 
    /**
     * Load a class using the provided classloader
-    * 
-    * @param name
-    * @return
-    * @throws PrivilegedActionException
+    *
+    * @param cl the classloader
+    * @param name the class name
+    * @return the loaded class
+    * @throws java.security.PrivilegedActionException
+    * @throws ClassNotFoundException
     */
-   static Class<?> loadClass(final ClassLoader cl, final String name) throws PrivilegedActionException, ClassNotFoundException
+   static Class<?> loadClass(final ClassLoader cl, final String name)
+           throws java.security.PrivilegedActionException, ClassNotFoundException
    {
-      SecurityManager sm = System.getSecurityManager();
-      if (sm == null)
+      if (!SecurityManagerUtils.isSecurityManagerAvailable())
       {
          return cl.loadClass(name);
       }
       else
       {
-         return AccessController.doPrivileged(new PrivilegedExceptionAction<Class<?>>() {
-            public Class<?> run() throws PrivilegedActionException
-            {
-               try
-               {
-                  return cl.loadClass(name);
-               }
-               catch (Exception e)
-               {
-                  throw new PrivilegedActionException(e);
-               }
-            }
-         });
+         return SecurityManagerUtils.doPrivilegedLoadClass(cl, name);
       }
    }
 
    /**
     * Get a system property
-    * 
-    * @param name
-    * @param defaultValue
-    * @return
+    *
+    * @param name the property name
+    * @param defaultValue the default value
+    * @return the property value
     */
    static String getSystemProperty(final String name, final String defaultValue)
    {
-      SecurityManager sm = System.getSecurityManager();
-      if (sm == null)
+      if (!SecurityManagerUtils.isSecurityManagerAvailable())
       {
          return System.getProperty(name, defaultValue);
       }
       else
       {
-         PrivilegedAction<String> action = new PrivilegedAction<String>() {
-            public String run()
-            {
-               return System.getProperty(name, defaultValue);
-            }
-         };
-         return AccessController.doPrivileged(action);
+         return doPrivilegedGetSystemProperty(name, defaultValue);
       }
+   }
+
+   /**
+    * Separate helper method to execute privileged action for getting system property, using FQN for
+    * deprecated/removed APIs, and avoid class loading issues on JDK 23+
+    */
+   @SuppressWarnings("removal")
+   private static String doPrivilegedGetSystemProperty(final String name, final String defaultValue)
+   {
+      java.security.PrivilegedAction<String> action =
+              new java.security.PrivilegedAction<String>() {
+                 public String run()
+                 {
+                    return System.getProperty(name, defaultValue);
+                 }
+              };
+      return java.security.AccessController.doPrivileged(action);
    }
 }

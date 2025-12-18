@@ -22,6 +22,10 @@ import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
 import org.jboss.ws.api.tools.WSContractConsumer;
+import org.jboss.ws.tools.ExitHandler;
+import org.jboss.ws.tools.ExitHandlerFactory;
+import org.jboss.ws.tools.SystemExitHandler;
+import org.jboss.ws.tools.SystemExitHandlerFactory;
 
 import java.io.File;
 import java.io.PrintStream;
@@ -76,8 +80,45 @@ public class WSConsume
    private boolean noCompile;
    private File sourceDir;
    private File clientJar;
+
+   private final ExitHandler exitHandler;
    
    public static final String PROGRAM_NAME = SecurityActions.getSystemProperty("program.name", WSConsume.class.getName());
+
+   /**
+    * Provides an exit handler implementation, based on whether the command is to be used by production or test code.
+    * The production code {@link SystemExitHandlerFactory}, which is the default, provides a {@link SystemExitHandler},
+    * that calls a pure {@code System.exit()}.<br>
+    * Other factories provide {@link ExitHandler} implementations that can override this behavior, for example
+    * to throw an exception instead of calling {@code System.exit()}.
+    * <p>
+    *     Thread safe as {@link ThreadLocal} holds the factory for each thread.
+    *     Each thread gets its own reference to the factory, preventing interference in parallel tests.
+    * </p>
+    */
+   private static final ThreadLocal<ExitHandlerFactory> factoryThreadLocal =
+           ThreadLocal.withInitial(SystemExitHandlerFactory::getInstance);
+
+   /**
+    * Tests call this BEFORE calling main() to inject TestExitHandlerFactory.
+    * Thread-safe: only affects the current thread.
+    *
+    * @param factory The concrete {@link ExitHandlerFactory} instance to use
+    */
+   public static void setExitHandlerFactory(ExitHandlerFactory factory)
+   {
+      factoryThreadLocal.set(factory);
+   }
+
+   /**
+    * Reset to default factory.
+    * Tests should call this in finally blocks to clean up.
+    */
+   public static void resetExitHandlerFactory()
+   {
+      // Revert to default
+      factoryThreadLocal.remove();
+   }
 
    public static void main(String[] args)
    {
@@ -92,12 +133,20 @@ public class WSConsume
            SecurityActions.setContextClassLoader(origLoader);
        }
    }
-   
+
    private static void mainInternal(final String[] args)
    {
-       WSConsume importer = new WSConsume();
-       URL wsdl = importer.parseArguments(args);
-       System.exit(importer.importServices(wsdl));
+      // Get the factory for THIS thread (singleton instance)
+      ExitHandlerFactory factory = factoryThreadLocal.get();
+
+      // Gets the concrete exit handler using the factory (also singleton instance)
+      WSConsume importer = new WSConsume(factory.get());
+      URL wsdl = importer.parseArguments(args);
+      importer.exitHandler.exit(importer.importServices(wsdl));
+   }
+
+   WSConsume(ExitHandler exitHandler) {
+      this.exitHandler = exitHandler;
    }
 
    private URL parseArguments(String[] args)
@@ -176,9 +225,9 @@ public class WSConsume
                break;
             case 'h':
                printHelp();
-               System.exit(0);
+               exitHandler.exit(0);
             case '?':
-               System.exit(1);
+               exitHandler.exit(1);
          }
       }
 
@@ -187,7 +236,7 @@ public class WSConsume
       {
          WSContractConsumer importer = WSContractConsumer.newInstance();
          System.out.println("WSContractConsumer instance: " + importer.getClass().getCanonicalName());
-         System.exit(0);
+         exitHandler.exit(0);
       }
 
       int wsdlPos = getopt.getOptind();
@@ -195,7 +244,7 @@ public class WSConsume
       {
          System.err.println("Error: WSDL URL was not specified!");
          printHelp();
-         System.exit(1);
+         exitHandler.exit(1);
       }
 
       URL url = null;
@@ -214,7 +263,7 @@ public class WSConsume
       catch (MalformedURLException e)
       {
          System.err.println("Error: Invalid URI: " + args[wsdlPos]);
-         System.exit(1);
+         exitHandler.exit(1);
       }
 
       return url;
