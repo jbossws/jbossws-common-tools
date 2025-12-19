@@ -33,7 +33,7 @@ public class CmdProvideTestCase extends CommandlineTestBase
       // clear events
       CmdProvideTracker.LAST_EVENT = "";
 
-      // enforce loading of the tracker implemenation
+      // enforce loading of the tracker implementation
       System.setProperty(
         "org.jboss.ws.api.tools.ProviderFactory",
         "org.jboss.test.ws.tools.CmdProvideTrackerFactory"
@@ -64,11 +64,20 @@ public class CmdProvideTestCase extends CommandlineTestBase
    public void testValidOutputDir() throws Exception
    {
       executeCmd("-o outputDir org.jboss.test.ws.tools.CalculatorBean", false);
-      assertTrue("setOutputDirectory() not invoked", CmdProvideTracker.LAST_EVENT.indexOf("setOutputDirectory")!=-1);
+      assertTrue("setOutputDirectory() not invoked", CmdProvideTracker.LAST_EVENT.contains("setOutputDirectory"));
    }
 
    void runDelegate(String[] args) throws Exception
    {
-      WSProvide.main(args);
+      // Inject TestExitHandlerFactory singleton into WSProvide
+      // Thread safe as it only affects the current thread.
+      // Uses the singleton TestExitHandlerFactory.getInstance() to override the behavior when System.exit() should be
+      // called.
+      WSProvide.setExitHandlerFactory(TestExitHandlerFactory.getInstance());
+      try {
+         WSProvide.main(args);
+      } finally {
+         WSProvide.resetExitHandlerFactory();
+      }
    }
 }

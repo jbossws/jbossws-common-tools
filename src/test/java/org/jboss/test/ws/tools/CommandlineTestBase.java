@@ -19,44 +19,21 @@
 package org.jboss.test.ws.tools;
 
 import junit.framework.TestCase;
+import org.jboss.ws.tools.ExitHandler;
 
-import java.security.Permission;
+import java.util.Arrays;
 
 /**
+ * Base class for command line tests that need to intercept System.exit() calls.
+ * Uses System Lambda library to overcome SecurityManager API deprecation/removal.
+ *
  * @author Heiko.Braun@jboss.com
  */
 public abstract class CommandlineTestBase extends TestCase
 {
-   SecurityManager systemDefault = System.getSecurityManager();
-   SecurityManager interceptor = new InterceptedSecurity();
-
-   protected void swapSecurityManager()
-   {
-      if(System.getSecurityManager() instanceof InterceptedSecurity)
-         System.setSecurityManager(systemDefault);
-      else
-         System.setSecurityManager(interceptor);
-   }
-
-   class InterceptedSecurity extends  SecurityManager
-   {
-      private final SecurityManager parent = systemDefault;
-
-      public void checkPermission(Permission perm)
-      {
-         if (parent != null)
-         {
-            parent.checkPermission(perm);
-         }
-      }
-
-      public void checkExit(int status)
-      {
-         String msg = (status == 0) ? "Delegate did exit without errors" : "Delegate did exit with an error";
-         throw new InterceptedExit(msg, status);
-      }
-   }
-
+   /**
+    * Exception thrown when exit is intercepted during testing.
+    */
    static protected class InterceptedExit extends SecurityException
    {
       private static final long serialVersionUID = 1L;
@@ -68,39 +45,45 @@ public abstract class CommandlineTestBase extends TestCase
          this.exitCode = code;
       }
 
-
       public int getExitCode()
       {
          return exitCode;
       }
    }
 
-   protected void executeCmd(String arguments,  boolean expectedException) throws Exception
+   /**
+    * Execute a command with the given arguments and intercept exit calls.
+    *
+    * @param arguments Command line arguments (space-separated)
+    * @param expectedException True if an exception or non-zero exit code is expected
+    * @throws Exception If the test fails or an unexpected error occurs
+    */
+   protected void executeCmd(String arguments, boolean expectedException) throws Exception
    {
-      swapSecurityManager();
+      String[] args = arguments != null ? arguments.split("\\s") : new String[0];
 
-      String[] args = arguments!=null ? arguments.split("\\s"): new String[0];
       try
       {
+         // Call delegate: MUST use ExitHandler, specifically testExitHandler here in test
          runDelegate(args);
-         if(expectedException)
-            fail("Did expect exception on args: " +args);
+
+         // If we get here without an exception, the tool completed without calling exit
+         if (expectedException)
+         {
+            fail("Did expect exception on args: " + Arrays.toString(args));
+         }
       }
-      catch (CommandlineTestBase.InterceptedExit e)
+      catch (InterceptedExit e)
       {
-         boolean positivStatus = (e.getExitCode() == 0);
-         if( (expectedException && positivStatus)
-           || (!expectedException && !positivStatus) )
+         // Exit was called - check if the status matches expectations
+         boolean positiveStatus = (e.getExitCode() == 0);
+
+         if ((expectedException && positiveStatus) || (!expectedException && !positiveStatus))
          {
             String s = expectedException ? "Did expect an exception, but " : "Did not expect an exception, but ";
-            String s2 = positivStatus ? "status was positiv" : "status was negativ";
-            throw new Exception(s+s2);
+            String s2 = positiveStatus ? "status was positive" : "status was negative";
+            throw new Exception(s + s2);
          }
-
-      }
-      finally
-      {
-         swapSecurityManager();
       }
    }
 

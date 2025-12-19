@@ -30,6 +30,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.ws.api.tools.WSContractProvider;
+import org.jboss.ws.tools.ExitHandler;
+import org.jboss.ws.tools.ExitHandlerFactory;
+import org.jboss.ws.tools.SystemExitHandler;
+import org.jboss.ws.tools.SystemExitHandlerFactory;
 
 /**
  * WSProvideTask is a cmd line tool that generates portable JAX-WS artifacts
@@ -73,15 +77,60 @@ public class WSProvide
    private File sourceDir;
    private String portSoapAddress;
 
+   private final ExitHandler exitHandler;
+
    public static final String PROGRAM_NAME = SecurityActions.getSystemProperty("program.name", WSProvide.class.getSimpleName());
+
+   /**
+    * Provides an exit handler implementation, based on whether the command is to be used by production or test code.
+    * The production code {@link SystemExitHandlerFactory}, which is the default, provides a {@link SystemExitHandler},
+    * that calls a pure {@code System.exit()}.<br>
+    * Other factories provide {@link ExitHandler} implementations that can override this behavior, for example
+    * to throw an exception instead of calling {@code System.exit()}.
+    * <p>
+    *     Thread safe as {@link ThreadLocal} holds the factory for each thread.
+    *     Each thread gets its own reference to the factory, preventing interference in parallel tests.
+    * </p>
+    */
+   private static final ThreadLocal<ExitHandlerFactory> factoryThreadLocal =
+           ThreadLocal.withInitial(SystemExitHandlerFactory::getInstance);
+
+   /**
+    * Tests call this BEFORE calling main() to inject TestExitHandlerFactory.
+    * Thread-safe: only affects the current thread.
+    *
+    * @param factory The concrete {@link ExitHandlerFactory} instance to use
+    */
+   public static void setExitHandlerFactory(ExitHandlerFactory factory)
+   {
+      factoryThreadLocal.set(factory);
+   }
+
+   /**
+    * Reset to default factory.
+    * Tests should call this in finally blocks to clean up.
+    */
+   public static void resetExitHandlerFactory()
+   {
+      // Revert to default
+      factoryThreadLocal.remove();
+   }
 
    public static void main(String[] args)
    {
-      WSProvide generate = new WSProvide();
+      // Get the factory for THIS thread (singleton instance)
+      ExitHandlerFactory factory = factoryThreadLocal.get();
+
+      // Gets the concrete exit handler using the factory (also singleton instance)
+      WSProvide generate = new WSProvide(factory.get());
       String endpoint = generate.parseArguments(args);
-      System.exit(generate.generate(endpoint));
+      generate.exitHandler.exit(generate.generate(endpoint));
    }
-   
+
+   WSProvide(ExitHandler exitHandler) {
+      this.exitHandler = exitHandler;
+   }
+
    private String parseArguments(String[] args)
    {
       String shortOpts = "hwko:r:s:a:c:qtle";
@@ -146,9 +195,9 @@ public class WSProvide
                break;
             case 'h':
                printHelp();
-               System.exit(0);
+               exitHandler.exit(0);
             case '?':
-               System.exit(1);
+               exitHandler.exit(1);
          }
       }
 
@@ -157,7 +206,7 @@ public class WSProvide
       {
          WSContractProvider gen = WSContractProvider.newInstance(loader);
          System.out.println("WSContractProvider instance: " + gen.getClass().getCanonicalName());
-         System.exit(0);
+         exitHandler.exit(0);
       }
 
       int endpointPos = getopt.getOptind();
@@ -165,7 +214,7 @@ public class WSProvide
       {
          System.err.println("Error: endpoint implementation was not specified!");
          printHelp();
-         System.exit(1);
+         exitHandler.exit(1);
       }
       
       return args[endpointPos];

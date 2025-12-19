@@ -35,7 +35,7 @@ public class CmdConsumeTestCase extends CommandlineTestBase
       // cleanup events
       CmdConsumeTracker.LAST_EVENT = "";
       
-      // enforce loading of the tracker implemenation
+      // enforce loading of the tracker implementation
       System.setProperty(
         "org.jboss.ws.api.tools.ConsumerFactory",
         "org.jboss.test.ws.tools.CmdConsumeTrackerFactory"
@@ -50,7 +50,7 @@ public class CmdConsumeTestCase extends CommandlineTestBase
    public void testValidBindingOption() throws Exception
    {
       executeCmd("-b binding-file.xml Service.wsdl", false);
-      assertTrue("setBindingFiles() not invoked",  CmdConsumeTracker.LAST_EVENT.indexOf("setBindingFiles")!=-1);
+      assertTrue("setBindingFiles() not invoked", CmdConsumeTracker.LAST_EVENT.contains("setBindingFiles"));
    }
 
    public void testMissingOptions() throws Exception
@@ -63,6 +63,15 @@ public class CmdConsumeTestCase extends CommandlineTestBase
 
    void runDelegate(String[] args) throws Exception
    {
-      WSConsume.main(args);
+      // Inject TestExitHandlerFactory singleton into WSConsume
+      // Thread safe as it only affects the current thread.
+      // Uses the singleton TestExitHandlerFactory.getInstance() to override the behavior when System.exit() should be
+      // called.
+      WSConsume.setExitHandlerFactory(TestExitHandlerFactory.getInstance());
+      try {
+         WSConsume.main(args);
+      } finally {
+         WSConsume.resetExitHandlerFactory();
+      }
    }
 }

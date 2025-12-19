@@ -18,17 +18,14 @@
  */
 package org.jboss.ws.tools.ant;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
+import org.jboss.ws.tools.security.legacy.SecurityManagerUtils;
 
 /**
- * Security actions for this package
- * 
- * @author alessio.soldano@jboss.com
- * @since 19-Jun-2009
+ * Security actions for this package.
+ * Keep both pre-JDK23 (with SecurityManager) and JDK23+ (without SecurityManager) approach
  *
+ * @author alessio.soldano@jboss.com
+ * @author fburzigo@ibm.com
  */
 final class SecurityActions
 {
@@ -39,71 +36,29 @@ final class SecurityActions
     */
    static ClassLoader getContextClassLoader()
    {
-      SecurityManager sm = System.getSecurityManager();
-      if (sm == null)
+      if (!SecurityManagerUtils.isSecurityManagerAvailable())
       {
          return Thread.currentThread().getContextClassLoader();
       }
       else
       {
-         return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-            public ClassLoader run()
-            {
-               return Thread.currentThread().getContextClassLoader();
-            }
-         });
+         return SecurityManagerUtils.doPrivilegedGetContextClassLoader();
       }
    }
 
    /**
     * Set context classloader.
     *
-    * @param cl the classloader
-    * @return previous context classloader
-    * @throws Throwable for any error
+    * @param classLoader the classloader
     */
-   static ClassLoader setContextClassLoader(final ClassLoader cl)
+   static void setContextClassLoader(final ClassLoader classLoader)
    {
-      if (System.getSecurityManager() == null)
+      if (!SecurityManagerUtils.isSecurityManagerAvailable())
       {
-         ClassLoader result = Thread.currentThread().getContextClassLoader();
-         if (cl != null)
-            Thread.currentThread().setContextClassLoader(cl);
-         return result;
+         Thread.currentThread().setContextClassLoader(classLoader);
       }
-      else
-      {
-         try
-         {
-            return AccessController.doPrivileged(new PrivilegedExceptionAction<ClassLoader>() {
-               public ClassLoader run() throws Exception
-               {
-                  try
-                  {
-                     ClassLoader result = Thread.currentThread().getContextClassLoader();
-                     if (cl != null)
-                        Thread.currentThread().setContextClassLoader(cl);
-                     return result;
-                  }
-                  catch (Exception e)
-                  {
-                     throw e;
-                  }
-                  catch (Error e)
-                  {
-                     throw e;
-                  }
-                  catch (Throwable e)
-                  {
-                     throw new RuntimeException("Error setting context classloader", e);
-                  }
-               }
-            });
-         }
-         catch (PrivilegedActionException e)
-         {
-            throw new RuntimeException("Error running privileged action", e.getCause());
-         }
+      else {
+         SecurityManagerUtils.doPrivilegedSetContextClassLoader(classLoader);
       }
    }
    
@@ -115,20 +70,13 @@ final class SecurityActions
     */
    static ClassLoader getClassLoader(final Class<?> clazz)
    {
-      SecurityManager sm = System.getSecurityManager();
-      if (sm == null)
+      if (!SecurityManagerUtils.isSecurityManagerAvailable())
       {
          return clazz.getClassLoader();
       }
       else
       {
-         return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-            public ClassLoader run()
-            {
-               return clazz.getClassLoader();
-            }
-         });
+         return SecurityManagerUtils.doPrivilegedGetContextClassLoader(clazz);
       }
    }
-
 }
