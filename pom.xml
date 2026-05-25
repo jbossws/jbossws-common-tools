@@ -29,7 +29,7 @@
     <!-- Repository Deployment Settings -->
     <nexus.staging.tag>jbossws-common-tools-${project.version}</nexus.staging.tag>
     <!-- Dependency versions -->
-    <jbossws.api.version>3.1.0.Beta1</jbossws.api.version>
+    <jbossws.api.version>3.1.0.Final</jbossws.api.version>
     <ant.version>1.10.15</ant.version>
     <getopt.version>1.0.13</getopt.version>
     <junit.version>4.13.2</junit.version>
