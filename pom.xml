@@ -10,7 +10,7 @@
   <description>JBoss Web Services - JBossWS Common Tools Jakarta Version</description>
   <url>https://github.com/jbossws/jbossws-common-tools</url>
 
-  <version>2.2.0.Beta2-SNAPSHOT</version>
+  <version>2.2.0.Final</version>
 
   <parent>
     <groupId>org.jboss.ws</groupId>
@@ -22,7 +22,7 @@
     <connection>scm:git:https://github.com/jbossws/jbossws-common-tools.git</connection>
     <developerConnection>scm:git:https://github.com/jbossws/jbossws-common-tools.git</developerConnection>
     <url>https://github.com/jbossws/jbossws-common-tools</url>
-    <tag>${nexus.staging.tag}</tag>
+    <tag>jbossws-common-tools-2.2.0.Final</tag>
   </scm>
 
   <properties>
